@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>記帳儀表板</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f11;
+    --surface: #1a1a1f;
+    --surface2: #222228;
+    --border: #2e2e38;
+    --text: #f0f0f5;
+    --muted: #7a7a8a;
+    --accent: #7c6af7;
+    --accent2: #4ecdc4;
+    --danger: #ff6b6b;
+    --warn: #ffd93d;
+    --success: #6bcb77;
+
+    --cat-食: #ff6b6b;
+    --cat-交: #4ecdc4;
+    --cat-住: #ffd93d;
+    --cat-購: #7c6af7;
+    --cat-娛: #ff9f43;
+    --cat-他: #a0a0b0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans TC', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* ── Setup Screen ── */
+  #setup-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+
+  .setup-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 480px;
+  }
+
+  .setup-card h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .setup-card p {
+    color: var(--muted);
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  .form-group {
+    margin-bottom: 1.25rem;
+  }
+
+  .form-group label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .form-group input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-group input:focus {
+    border-color: var(--accent);
+  }
+
+  .btn-primary {
+    width: 100%;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.85rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+    font-family: 'Noto Sans TC', sans-serif;
+  }
+
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-primary:active { transform: scale(0.98); }
+
+  /* ── Dashboard ── */
+  #dashboard { display: none; }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 2rem;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 10;
+  }
+
+  .topbar h1 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .month-nav {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.4rem 0.75rem;
+  }
+
+  .month-nav button {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0 0.25rem;
+    transition: color 0.2s;
+  }
+
+  .month-nav button:hover { color: var(--text); }
+
+  #month-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    min-width: 80px;
+    text-align: center;
+  }
+
+  .btn-export {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.4rem 0.9rem;
+    color: var(--text);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    font-family: 'Noto Sans TC', sans-serif;
+  }
+
+  .btn-export:hover { border-color: var(--accent); color: var(--accent); }
+
+  .main {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* ── Stat Cards ── */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 1.75rem;
+    font-weight: 500;
+    line-height: 1;
+  }
+
+  .stat-value.accent { color: var(--accent); }
+  .stat-value.success { color: var(--success); }
+  .stat-value.warn { color: var(--warn); }
+
+  /* ── Chart Grid ── */
+  .chart-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .chart-grid { grid-template-columns: 1fr; }
+    .topbar { padding: 1rem; }
+    .main { padding: 1rem; }
+  }
+
+  .chart-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+
+  .chart-card h2 {
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.25rem;
+  }
+
+  .chart-wrap {
+    position: relative;
+    height: 240px;
+  }
+
+  /* ── Member Table ── */
+  .member-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .member-card h2 {
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.25rem;
+  }
+
+  .member-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .member-row:last-child { border-bottom: none; }
+
+  .member-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--surface2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .member-name { flex: 1; font-size: 0.9rem; }
+
+  .member-bar-wrap {
+    flex: 2;
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .member-bar {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 3px;
+    transition: width 0.6s ease;
+  }
+
+  .member-amount {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--text);
+    min-width: 80px;
+    text-align: right;
+  }
+
+  /* ── Records Table ── */
+  .records-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .records-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.25rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .records-header h2 {
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .filter-row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.3rem 0.75rem;
+    color: var(--muted);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'Noto Sans TC', sans-serif;
+  }
+
+  .filter-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+
+  th {
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    color: var(--muted);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 400;
+    border-bottom: 1px solid var(--border);
+  }
+
+  td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--surface2); }
+
+  .cat-badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .amount-cell {
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    color: var(--danger);
+  }
+
+  .date-cell {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  /* ── Loading / Error ── */
+  .loading {
+    text-align: center;
+    padding: 3rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  .spinner {
+    width: 32px;
+    height: 32px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 1rem;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .empty {
+    text-align: center;
+    padding: 2rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Setup Screen ── -->
+<div id="setup-screen">
+  <div class="setup-card">
+    <h1>📒 記帳儀表板</h1>
+    <p>輸入你的 Supabase 連線資訊來開始使用。<br>資訊只會儲存在你的瀏覽器中。</p>
+    <div class="form-group">
+      <label>Supabase URL</label>
+      <input type="text" id="input-url" placeholder="https://xxxxxxxx.supabase.co">
+    </div>
+    <div class="form-group">
+      <label>Supabase Anon Key</label>
+      <input type="text" id="input-key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...">
+    </div>
+    <div class="form-group">
+      <label>LINE 群組 ID（選填，留空顯示所有群組）</label>
+      <input type="text" id="input-group" placeholder="C1234567890abcdef...">
+    </div>
+    <button class="btn-primary" onclick="connect()">連線</button>
+    <p id="setup-error" style="color:var(--danger);font-size:0.8rem;margin-top:0.75rem;display:none"></p>
+  </div>
+</div>
+
+<!-- ── Dashboard ── -->
+<div id="dashboard">
+  <div class="topbar">
+    <h1>📒 記帳儀表板</h1>
+    <div class="topbar-right">
+      <div class="month-nav">
+        <button onclick="changeMonth(-1)">‹</button>
+        <span id="month-label"></span>
+        <button onclick="changeMonth(1)">›</button>
+      </div>
+      <button class="btn-export" onclick="exportCSV()">匯出 CSV</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div id="loading" class="loading">
+      <div class="spinner"></div>
+      載入資料中...
+    </div>
+
+    <div id="content" style="display:none">
+      <!-- Stat Cards -->
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-label">本月總支出</div>
+          <div class="stat-value accent" id="stat-total">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">記帳筆數</div>
+          <div class="stat-value" id="stat-count">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">平均每筆</div>
+          <div class="stat-value warn" id="stat-avg">—</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">最大單筆</div>
+          <div class="stat-value" id="stat-max">—</div>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div class="chart-grid">
+        <div class="chart-card">
+          <h2>類別佔比</h2>
+          <div class="chart-wrap">
+            <canvas id="chart-pie"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <h2>每日趨勢</h2>
+          <div class="chart-wrap">
+            <canvas id="chart-line"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Members -->
+      <div class="member-card">
+        <h2>成員統計</h2>
+        <div id="member-list"></div>
+      </div>
+
+      <!-- Records -->
+      <div class="records-card">
+        <div class="records-header">
+          <h2>明細紀錄</h2>
+          <div class="filter-row" id="filter-row">
+            <button class="filter-btn active" onclick="filterCategory('全部')">全部</button>
+            <button class="filter-btn" onclick="filterCategory('餐飲')">餐飲</button>
+            <button class="filter-btn" onclick="filterCategory('交通')">交通</button>
+            <button class="filter-btn" onclick="filterCategory('住宿')">住宿</button>
+            <button class="filter-btn" onclick="filterCategory('購物')">購物</button>
+            <button class="filter-btn" onclick="filterCategory('娛樂')">娛樂</button>
+            <button class="filter-btn" onclick="filterCategory('其他')">其他</button>
+          </div>
+        </div>
+        <div id="records-table"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── State ──
+let SUPABASE_URL = '';
+let SUPABASE_KEY = '';
+let GROUP_ID = '';
+let currentYear = new Date().getFullYear();
+let currentMonth = new Date().getMonth() + 1;
+let allRecords = [];
+let activeFilter = '全部';
+let charts = {};
+
+const CAT_COLORS = {
+  '餐飲': '#ff6b6b',
+  '交通': '#4ecdc4',
+  '住宿': '#ffd93d',
+  '購物': '#7c6af7',
+  '娛樂': '#ff9f43',
+  '其他': '#a0a0b0',
+};
+
+const CAT_EMOJI = {
+  '餐飲': '🍜', '交通': '🚌', '住宿': '🏨',
+  '購物': '🛒', '娛樂': '🎬', '其他': '📦',
+};
+
+// ── Setup ──
+function connect() {
+  const url = document.getElementById('input-url').value.trim();
+  const key = document.getElementById('input-key').value.trim();
+  const group = document.getElementById('input-group').value.trim();
+
+  if (!url || !key) {
+    showSetupError('請填入 Supabase URL 和 Anon Key');
+    return;
+  }
+
+  SUPABASE_URL = url.replace(/\/$/, '');
+  SUPABASE_KEY = key;
+  GROUP_ID = group;
+
+  localStorage.setItem('sb_url', SUPABASE_URL);
+  localStorage.setItem('sb_key', SUPABASE_KEY);
+  localStorage.setItem('sb_group', GROUP_ID);
+
+  showDashboard();
+}
+
+function showSetupError(msg) {
+  const el = document.getElementById('setup-error');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+// ── Auto-login ──
+window.addEventListener('load', () => {
+  const url = localStorage.getItem('sb_url');
+  const key = localStorage.getItem('sb_key');
+  if (url && key) {
+    document.getElementById('input-url').value = url;
+    document.getElementById('input-key').value = key;
+    document.getElementById('input-group').value = localStorage.getItem('sb_group') || '';
+    SUPABASE_URL = url;
+    SUPABASE_KEY = key;
+    GROUP_ID = localStorage.getItem('sb_group') || '';
+    showDashboard();
+  }
+});
+
+function showDashboard() {
+  document.getElementById('setup-screen').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  updateMonthLabel();
+  loadData();
+}
+
+// ── Month Navigation ──
+function updateMonthLabel() {
+  document.getElementById('month-label').textContent =
+    `${currentYear}/${String(currentMonth).padStart(2, '0')}`;
+}
+
+function changeMonth(delta) {
+  currentMonth += delta;
+  if (currentMonth > 12) { currentMonth = 1; currentYear++; }
+  if (currentMonth < 1)  { currentMonth = 12; currentYear--; }
+  updateMonthLabel();
+  loadData();
+}
+
+// ── Data Fetch ──
+async function loadData() {
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('content').style.display = 'none';
+
+  const startDate = `${currentYear}-${String(currentMonth).padStart(2,'0')}-01`;
+  const endDate = currentMonth === 12
+    ? `${currentYear + 1}-01-01`
+    : `${currentYear}-${String(currentMonth + 1).padStart(2,'0')}-01`;
+
+  let url = `${SUPABASE_URL}/rest/v1/records?select=*&created_at=gte.${startDate}&created_at=lt.${endDate}&order=created_at.desc`;
+  if (GROUP_ID) url += `&group_id=eq.${encodeURIComponent(GROUP_ID)}`;
+
+  try {
+    const res = await fetch(url, {
+      headers: {
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+      }
+    });
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    allRecords = await res.json();
+    renderAll();
+  } catch (err) {
+    document.getElementById('loading').innerHTML =
+      `<p style="color:var(--danger)">載入失敗：${err.message}<br><small>請確認 Supabase URL 和 Key 是否正確</small></p>`;
+  }
+}
+
+// ── Render ──
+function renderAll() {
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('content').style.display = 'block';
+
+  renderStats();
+  renderPieChart();
+  renderLineChart();
+  renderMembers();
+  renderTable(activeFilter);
+}
+
+function renderStats() {
+  const total = allRecords.reduce((s, r) => s + Number(r.amount), 0);
+  const count = allRecords.length;
+  const avg = count ? total / count : 0;
+  const max = count ? Math.max(...allRecords.map(r => Number(r.amount))) : 0;
+
+  document.getElementById('stat-total').textContent = `$${Math.round(total).toLocaleString()}`;
+  document.getElementById('stat-count').textContent = count;
+  document.getElementById('stat-avg').textContent = `$${Math.round(avg).toLocaleString()}`;
+  document.getElementById('stat-max').textContent = `$${Math.round(max).toLocaleString()}`;
+}
+
+function renderPieChart() {
+  const byCategory = {};
+  for (const r of allRecords) {
+    byCategory[r.category] = (byCategory[r.category] || 0) + Number(r.amount);
+  }
+
+  const labels = Object.keys(byCategory);
+  const data = labels.map(l => Math.round(byCategory[l]));
+  const colors = labels.map(l => CAT_COLORS[l] || '#a0a0b0');
+
+  if (charts.pie) charts.pie.destroy();
+  const ctx = document.getElementById('chart-pie').getContext('2d');
+  charts.pie = new Chart(ctx, {
+    type: 'doughnut',
+    data: { labels, datasets: [{ data, backgroundColor: colors, borderWidth: 0, hoverOffset: 8 }] },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'right',
+          labels: { color: '#7a7a8a', font: { size: 12 }, padding: 12, boxWidth: 12 }
+        },
+        tooltip: {
+          callbacks: {
+            label: ctx => ` $${ctx.raw.toLocaleString()} (${Math.round(ctx.raw / ctx.dataset.data.reduce((a,b)=>a+b,0)*100)}%)`
+          }
+        }
+      },
+      cutout: '65%',
+    }
+  });
+}
+
+function renderLineChart() {
+  // Build daily totals for the month
+  const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+  const dailyTotals = Array(daysInMonth).fill(0);
+
+  for (const r of allRecords) {
+    const day = new Date(r.created_at).getDate() - 1;
+    if (day >= 0 && day < daysInMonth) {
+      dailyTotals[day] += Number(r.amount);
+    }
+  }
+
+  const labels = Array.from({ length: daysInMonth }, (_, i) => `${i + 1}日`);
+
+  if (charts.line) charts.line.destroy();
+  const ctx = document.getElementById('chart-line').getContext('2d');
+  charts.line = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: '支出',
+        data: dailyTotals,
+        backgroundColor: 'rgba(124,106,247,0.5)',
+        borderColor: 'rgba(124,106,247,0.9)',
+        borderWidth: 1,
+        borderRadius: 4,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => ` $${Math.round(ctx.raw).toLocaleString()}` } }
+      },
+      scales: {
+        x: { ticks: { color: '#7a7a8a', font: { size: 10 }, maxTicksLimit: 10 }, grid: { display: false } },
+        y: { ticks: { color: '#7a7a8a', font: { size: 10 }, callback: v => `$${v.toLocaleString()}` }, grid: { color: '#2e2e38' } }
+      }
+    }
+  });
+}
+
+function renderMembers() {
+  const byUser = {};
+  for (const r of allRecords) {
+    const name = r.user_name || r.user_id;
+    byUser[name] = (byUser[name] || 0) + Number(r.amount);
+  }
+
+  const sorted = Object.entries(byUser).sort((a, b) => b[1] - a[1]);
+  const max = sorted[0]?.[1] || 1;
+
+  const html = sorted.map(([name, amt]) => {
+    const pct = Math.round(amt / max * 100);
+    const initial = name.charAt(name.length - 1);
+    return `
+      <div class="member-row">
+        <div class="member-avatar">${initial}</div>
+        <div class="member-name">${name}</div>
+        <div class="member-bar-wrap">
+          <div class="member-bar" style="width:${pct}%"></div>
+        </div>
+        <div class="member-amount">$${Math.round(amt).toLocaleString()}</div>
+      </div>`;
+  }).join('');
+
+  document.getElementById('member-list').innerHTML = html || '<div class="empty">無資料</div>';
+}
+
+function filterCategory(cat) {
+  activeFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent === cat);
+  });
+  renderTable(cat);
+}
+
+function renderTable(catFilter) {
+  const filtered = catFilter === '全部'
+    ? allRecords
+    : allRecords.filter(r => r.category === catFilter);
+
+  if (!filtered.length) {
+    document.getElementById('records-table').innerHTML = '<div class="empty">無紀錄</div>';
+    return;
+  }
+
+  const rows = filtered.map(r => {
+    const date = new Date(r.created_at);
+    const dateStr = `${date.getMonth()+1}/${date.getDate()} ${String(date.getHours()).padStart(2,'0')}:${String(date.getMinutes()).padStart(2,'0')}`;
+    const color = CAT_COLORS[r.category] || '#a0a0b0';
+    const emoji = CAT_EMOJI[r.category] || '📦';
+    return `
+      <tr>
+        <td class="date-cell">${dateStr}</td>
+        <td>${r.user_name || '—'}</td>
+        <td>${emoji} ${r.item}</td>
+        <td><span class="cat-badge" style="background:${color}22;color:${color}">${r.category}</span></td>
+        <td class="amount-cell">$${Number(r.amount).toLocaleString()}</td>
+        <td style="color:var(--muted);font-size:0.8rem">${r.note || ''}</td>
+      </tr>`;
+  }).join('');
+
+  document.getElementById('records-table').innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th>時間</th><th>成員</th><th>品項</th><th>類別</th><th>金額</th><th>備註</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+}
+
+// ── CSV Export ──
+function exportCSV() {
+  if (!allRecords.length) return alert('沒有資料可以匯出');
+
+  const header = ['時間', '成員', '品項', '類別', '金額', '備註'];
+  const rows = allRecords.map(r => [
+    new Date(r.created_at).toLocaleString('zh-TW'),
+    r.user_name || '',
+    r.item,
+    r.category,
+    r.amount,
+    r.note || '',
+  ]);
+
+  const csv = [header, ...rows]
+    .map(row => row.map(v => `"${String(v).replace(/"/g, '""')}"`).join(','))
+    .join('\n');
+
+  const bom = '\uFEFF'; // UTF-8 BOM for Excel
+  const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `記帳_${currentYear}${String(currentMonth).padStart(2,'0')}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
