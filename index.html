@@ -142,8 +142,15 @@ let SUPABASE_URL='',SUPABASE_KEY='',GROUP_ID='';
 let currentYear=new Date().getFullYear(),currentMonth=new Date().getMonth()+1;
 let allRecords=[],activeFilter='全部',charts={},currentRate=0.21;
 
-const CAT_COLORS={'餐飲':'#ff6b6b','交通':'#4ecdc4','住宿':'#ffd93d','購物':'#7c6af7','娛樂':'#ff9f43','其他':'#a0a0b0'};
-const CAT_EMOJI={'餐飲':'🍜','交通':'🚌','住宿':'🏨','購物':'🛒','娛樂':'🎬','其他':'📦'};
+const CAT_COLORS = {
+  '餐飲': '#ff6b6b', '交通': '#4ecdc4', '住宿': '#ffd93d',
+  '購物': '#7c6af7', '娛樂': '#ff9f43', '日用品': '#5dade2', '其他': '#a0a0b0',
+};
+
+const CAT_EMOJI = {
+  '餐飲': '🍜', '交通': '🚌', '住宿': '🏨',
+  '購物': '🛒', '娛樂': '🎬', '日用品': '🧴', '其他': '📦',
+};
 
 async function fetchRate(){
   try{
