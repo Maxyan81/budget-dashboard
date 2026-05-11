@@ -26,42 +26,65 @@
   #dashboard{display:none;}
   .topbar{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 2rem;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:10;gap:1rem;flex-wrap:wrap;}
   .topbar h1{font-size:1.1rem;font-weight:700;}
-  .topbar-right{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
-  .rate-badge{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0.4rem 0.9rem;font-size:0.8rem;color:var(--twd);font-family:'DM Mono',monospace;display:flex;align-items:center;gap:0.4rem;}
+  .topbar-right{display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;}
+  .rate-badge{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0.4rem 0.9rem;font-size:0.78rem;color:var(--twd);font-family:'DM Mono',monospace;display:flex;align-items:center;gap:0.4rem;}
   .rate-dot{width:6px;height:6px;border-radius:50%;background:var(--success);animation:pulse 2s infinite;}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+  .currency-toggle{display:flex;align-items:center;gap:0.25rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0.3rem;}
+  .curr-btn{background:none;border:none;border-radius:6px;padding:0.3rem 0.65rem;color:var(--muted);font-size:0.78rem;cursor:pointer;font-family:'Noto Sans TC',sans-serif;transition:all 0.2s;}
+  .curr-btn.active{background:var(--accent);color:white;}
   .month-nav{display:flex;align-items:center;gap:0.5rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0.4rem 0.75rem;}
   .month-nav button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:0 0.25rem;}
   #month-label{font-family:'DM Mono',monospace;font-size:0.85rem;min-width:80px;text-align:center;}
-  .btn-export,.btn-logout{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0.4rem 0.9rem;color:var(--text);font-size:0.85rem;cursor:pointer;font-family:'Noto Sans TC',sans-serif;}
+  .btn-export,.btn-logout{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0.4rem 0.9rem;color:var(--text);font-size:0.82rem;cursor:pointer;font-family:'Noto Sans TC',sans-serif;}
   .btn-logout{color:var(--muted);}
   .main{padding:2rem;max-width:1200px;margin:0 auto;}
 
-  /* currency toggle */
-  .currency-toggle{display:flex;align-items:center;gap:0.5rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0.3rem;}
-  .curr-btn{background:none;border:none;border-radius:6px;padding:0.3rem 0.75rem;color:var(--muted);font-size:0.8rem;cursor:pointer;font-family:'Noto Sans TC',sans-serif;transition:all 0.2s;}
-  .curr-btn.active{background:var(--accent);color:white;}
-
+  /* Stats */
   .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:2rem;}
   .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.5rem;}
   .stat-card.income-card{border-color:rgba(39,174,96,0.3);background:rgba(39,174,96,0.05);}
   .stat-card.balance-card{border-color:rgba(124,106,247,0.3);}
-  .stat-label{font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.5rem;}
+  .stat-label{font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.5rem;}
   .stat-value{font-family:'DM Mono',monospace;font-size:1.6rem;font-weight:500;line-height:1;}
-  .stat-sub{font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--twd);margin-top:0.35rem;}
+  .stat-sub{font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--twd);margin-top:0.35rem;}
   .stat-value.accent{color:var(--accent);}
   .stat-value.warn{color:var(--warn);}
   .stat-value.income{color:var(--income);}
   .stat-value.danger{color:var(--danger);}
 
+  /* Budget Section */
+  .budget-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:2rem;}
+  .budget-card h2{font-size:0.85rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:1.25rem;}
+  .budget-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;}
+  .budget-item{background:var(--surface2);border-radius:10px;padding:1rem 1.25rem;}
+  .budget-item-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;}
+  .budget-cat{font-size:0.9rem;font-weight:500;display:flex;align-items:center;gap:0.4rem;}
+  .budget-pct{font-family:'DM Mono',monospace;font-size:0.85rem;font-weight:500;}
+  .budget-bar-wrap{height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin-bottom:0.5rem;}
+  .budget-bar{height:100%;border-radius:4px;transition:width 0.6s ease;}
+  .budget-bar.ok{background:var(--success);}
+  .budget-bar.warn{background:var(--warn);}
+  .budget-bar.over{background:var(--danger);}
+  .budget-amounts{display:flex;justify-content:space-between;font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--muted);}
+  .budget-amounts .used{color:var(--text);}
+  .budget-amounts .total{color:var(--muted);}
+  .budget-status{font-size:0.72rem;margin-top:0.3rem;}
+  .budget-status.ok{color:var(--success);}
+  .budget-status.warn{color:var(--warn);}
+  .budget-status.over{color:var(--danger);}
+  .no-budget{color:var(--muted);font-size:0.85rem;padding:1rem 0;}
+
+  /* Charts */
   .chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem;}
   @media(max-width:768px){.chart-grid{grid-template-columns:1fr}.topbar{padding:1rem}.main{padding:1rem}}
   .chart-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;}
   .chart-card h2{font-size:0.85rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:1.25rem;}
   .chart-wrap{position:relative;height:240px;}
 
-  .member-card,.records-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:2rem;}
-  .member-card h2,.records-header h2{font-size:0.85rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:1.25rem;}
+  /* Members */
+  .member-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:2rem;}
+  .member-card h2{font-size:0.85rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:1.25rem;}
   .member-row{display:flex;align-items:center;gap:1rem;padding:0.75rem 0;border-bottom:1px solid var(--border);}
   .member-row:last-child{border-bottom:none;}
   .member-avatar{width:36px;height:36px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;color:var(--accent);flex-shrink:0;}
@@ -71,26 +94,29 @@
   .member-amount{font-family:'DM Mono',monospace;font-size:0.85rem;min-width:110px;text-align:right;}
   .member-sub{font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--twd);min-width:90px;text-align:right;}
 
+  /* Records */
+  .records-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:2rem;}
   .records-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;gap:1rem;flex-wrap:wrap;}
+  .records-header h2{font-size:0.85rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;}
   .filter-row{display:flex;gap:0.5rem;flex-wrap:wrap;}
-  .filter-btn{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:0.3rem 0.75rem;color:var(--muted);font-size:0.8rem;cursor:pointer;font-family:'Noto Sans TC',sans-serif;}
+  .filter-btn{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:0.3rem 0.75rem;color:var(--muted);font-size:0.78rem;cursor:pointer;font-family:'Noto Sans TC',sans-serif;}
   .filter-btn.active{background:var(--accent);border-color:var(--accent);color:white;}
   .filter-btn.income-btn.active{background:var(--income);border-color:var(--income);}
-  table{width:100%;border-collapse:collapse;font-size:0.88rem;}
-  th{text-align:left;padding:0.5rem 0.75rem;color:var(--muted);font-size:0.75rem;text-transform:uppercase;letter-spacing:0.06em;font-weight:400;border-bottom:1px solid var(--border);}
+  table{width:100%;border-collapse:collapse;font-size:0.87rem;}
+  th{text-align:left;padding:0.5rem 0.75rem;color:var(--muted);font-size:0.72rem;text-transform:uppercase;letter-spacing:0.06em;font-weight:400;border-bottom:1px solid var(--border);}
   td{padding:0.75rem;border-bottom:1px solid var(--border);vertical-align:middle;}
   tr:last-child td{border-bottom:none;}
   tr:hover td{background:var(--surface2);}
   tr.income-row td{background:rgba(39,174,96,0.03);}
-  .cat-badge{display:inline-block;padding:0.2rem 0.6rem;border-radius:4px;font-size:0.75rem;font-weight:500;}
+  .cat-badge{display:inline-block;padding:0.2rem 0.6rem;border-radius:4px;font-size:0.72rem;font-weight:500;}
   .amount-main{font-family:'DM Mono',monospace;font-weight:500;}
   .amount-main.expense{color:var(--danger);}
   .amount-main.income{color:var(--income);}
-  .amount-sub{font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--twd);}
+  .amount-sub{font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--twd);}
   .curr-badge{display:inline-block;padding:0.1rem 0.4rem;border-radius:3px;font-size:0.68rem;font-family:'DM Mono',monospace;margin-left:0.3rem;}
   .curr-badge.jpy{background:rgba(255,107,107,0.15);color:#ff9999;}
   .curr-badge.twd{background:rgba(78,205,196,0.15);color:var(--twd);}
-  .date-cell{font-family:'DM Mono',monospace;font-size:0.8rem;color:var(--muted);}
+  .date-cell{font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--muted);}
   .type-badge{display:inline-block;padding:0.15rem 0.5rem;border-radius:4px;font-size:0.7rem;}
   .type-badge.expense{background:rgba(255,107,107,0.15);color:var(--danger);}
   .type-badge.income{background:rgba(39,174,96,0.15);color:var(--income);}
@@ -119,11 +145,10 @@
     <h1>📒 記帳儀表板</h1>
     <div class="topbar-right">
       <div class="rate-badge"><span class="rate-dot"></span><span id="rate-display">匯率載入中...</span></div>
-      <!-- 儀表板顯示幣別切換 -->
       <div class="currency-toggle">
-        <button class="curr-btn active" id="btn-jpy" onclick="setDisplayCurrency('JPY')">🇯🇵 JPY</button>
+        <button class="curr-btn active" id="btn-all" onclick="setDisplayCurrency('ALL')">全部</button>
+        <button class="curr-btn" id="btn-jpy" onclick="setDisplayCurrency('JPY')">🇯🇵 JPY</button>
         <button class="curr-btn" id="btn-twd" onclick="setDisplayCurrency('TWD')">🇹🇼 TWD</button>
-        <button class="curr-btn" id="btn-all" onclick="setDisplayCurrency('ALL')">全部</button>
       </div>
       <div class="month-nav">
         <button onclick="changeMonth(-1)">‹</button>
@@ -138,40 +163,32 @@
   <div class="main">
     <div id="loading" class="loading"><div class="spinner"></div>載入資料中...</div>
     <div id="content" style="display:none">
+
+      <!-- Stats -->
       <div class="stat-grid">
-        <div class="stat-card">
-          <div class="stat-label">本月支出</div>
-          <div class="stat-value danger" id="stat-expense">—</div>
-          <div class="stat-sub" id="stat-expense-sub"></div>
-        </div>
-        <div class="stat-card income-card">
-          <div class="stat-label">本月收入</div>
-          <div class="stat-value income" id="stat-income">—</div>
-          <div class="stat-sub" id="stat-income-sub"></div>
-        </div>
-        <div class="stat-card balance-card">
-          <div class="stat-label">結餘</div>
-          <div class="stat-value accent" id="stat-balance">—</div>
-          <div class="stat-sub" id="stat-balance-sub"></div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">記帳筆數</div>
-          <div class="stat-value" id="stat-count">—</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">平均每筆支出</div>
-          <div class="stat-value warn" id="stat-avg">—</div>
-          <div class="stat-sub" id="stat-avg-sub"></div>
-        </div>
+        <div class="stat-card"><div class="stat-label">本月支出</div><div class="stat-value danger" id="stat-expense">—</div><div class="stat-sub" id="stat-expense-sub"></div></div>
+        <div class="stat-card income-card"><div class="stat-label">本月收入</div><div class="stat-value income" id="stat-income">—</div><div class="stat-sub" id="stat-income-sub"></div></div>
+        <div class="stat-card balance-card"><div class="stat-label">結餘</div><div class="stat-value accent" id="stat-balance">—</div><div class="stat-sub" id="stat-balance-sub"></div></div>
+        <div class="stat-card"><div class="stat-label">記帳筆數</div><div class="stat-value" id="stat-count">—</div></div>
+        <div class="stat-card"><div class="stat-label">平均每筆支出</div><div class="stat-value warn" id="stat-avg">—</div><div class="stat-sub" id="stat-avg-sub"></div></div>
       </div>
 
+      <!-- Budget -->
+      <div class="budget-card">
+        <h2>🎯 本月預算進度</h2>
+        <div id="budget-content"><div class="no-budget">載入中...</div></div>
+      </div>
+
+      <!-- Charts -->
       <div class="chart-grid">
         <div class="chart-card"><h2>支出類別佔比</h2><div class="chart-wrap"><canvas id="chart-pie"></canvas></div></div>
         <div class="chart-card"><h2>每日收支趨勢</h2><div class="chart-wrap"><canvas id="chart-line"></canvas></div></div>
       </div>
 
+      <!-- Members -->
       <div class="member-card"><h2>成員支出統計</h2><div id="member-list"></div></div>
 
+      <!-- Records -->
       <div class="records-card">
         <div class="records-header">
           <h2>明細紀錄</h2>
@@ -196,9 +213,9 @@
 <script>
 let SUPABASE_URL='',SUPABASE_KEY='',GROUP_ID='';
 let currentYear=new Date().getFullYear(),currentMonth=new Date().getMonth()+1;
-let allRecords=[],activeFilter='全部',charts={};
-let jpyRate=0.21; // 1 JPY = ? TWD
-let displayCurrency='ALL'; // 儀表板顯示模式
+let allRecords=[],budgetData=[],activeFilter='全部',charts={};
+let jpyRate=0.21;
+let displayCurrency='ALL';
 
 const CAT_COLORS={'餐飲':'#ff6b6b','交通':'#4ecdc4','住宿':'#ffd93d','購物':'#7c6af7','娛樂':'#ff9f43','日用品':'#5dade2','收入':'#27AE60','其他':'#a0a0b0'};
 const CAT_EMOJI={'餐飲':'🍜','交通':'🚌','住宿':'🏨','購物':'🛒','娛樂':'🎬','日用品':'🧴','收入':'💰','其他':'📦'};
@@ -209,43 +226,39 @@ async function fetchRate(){
     const data=await res.json();
     jpyRate=data.rates['TWD']||0.21;
     document.getElementById('rate-display').textContent=`1 JPY = ${jpyRate.toFixed(4)} TWD`;
-  }catch{
-    document.getElementById('rate-display').textContent='匯率暫無法取得';
-  }
+  }catch{document.getElementById('rate-display').textContent='匯率暫無法取得';}
 }
 
-// 統一換算為 TWD
-function toTWD(amount, currency){
-  if(currency==='TWD') return Number(amount);
-  return Number(amount) * jpyRate;
+function toTWD(amount,currency){
+  if(currency==='TWD')return Number(amount);
+  return Number(amount)*jpyRate;
 }
 
-// 格式化金額顯示
-function fmtMain(amount, currency){
-  const sym = currency==='TWD' ? 'NT$' : '¥';
+function toJPY(amount,currency){
+  if(currency==='JPY')return Number(amount);
+  return Number(amount)/jpyRate;
+}
+
+function fmtMain(amount,currency){
+  const sym=currency==='TWD'?'NT$':'¥';
   return `${sym}${Number(amount).toLocaleString()}`;
 }
 
-// 換算到另一個幣別顯示
-function fmtSub(amount, currency){
-  if(currency==='TWD'){
-    return `≈ ¥${Math.round(Number(amount)/jpyRate).toLocaleString()}`;
-  }
+function fmtSub(amount,currency){
+  if(currency==='TWD')return `≈ ¥${Math.round(Number(amount)/jpyRate).toLocaleString()}`;
   return `≈ NT$${Math.round(Number(amount)*jpyRate).toLocaleString()}`;
 }
 
-// 設定儀表板顯示幣別
 function setDisplayCurrency(curr){
   displayCurrency=curr;
-  ['jpy','twd','all'].forEach(c=>{
-    document.getElementById(`btn-${c}`).classList.toggle('active', c===curr.toLowerCase());
+  ['all','jpy','twd'].forEach(c=>{
+    document.getElementById(`btn-${c}`).classList.toggle('active',c===curr.toLowerCase());
   });
   renderAll();
 }
 
-// 篩選紀錄依顯示幣別
 function filterByCurrency(records){
-  if(displayCurrency==='ALL') return records;
+  if(displayCurrency==='ALL')return records;
   return records.filter(r=>(r.currency||'JPY')===displayCurrency);
 }
 
@@ -289,14 +302,26 @@ function changeMonth(delta){
 async function loadData(){
   document.getElementById('loading').style.display='block';
   document.getElementById('content').style.display='none';
+
   const startDate=`${currentYear}-${String(currentMonth).padStart(2,'0')}-01`;
   const endDate=currentMonth===12?`${currentYear+1}-01-01`:`${currentYear}-${String(currentMonth+1).padStart(2,'0')}-01`;
-  let url=`${SUPABASE_URL}/rest/v1/records?select=*&created_at=gte.${startDate}&created_at=lt.${endDate}&order=created_at.desc`;
-  if(GROUP_ID)url+=`&group_id=eq.${encodeURIComponent(GROUP_ID)}`;
+
+  let recordUrl=`${SUPABASE_URL}/rest/v1/records?select=*&created_at=gte.${startDate}&created_at=lt.${endDate}&order=created_at.desc`;
+  if(GROUP_ID)recordUrl+=`&group_id=eq.${encodeURIComponent(GROUP_ID)}`;
+
+  let budgetUrl=`${SUPABASE_URL}/rest/v1/budgets?select=*`;
+  if(GROUP_ID)budgetUrl+=`&group_id=eq.${encodeURIComponent(GROUP_ID)}`;
+
   try{
-    const res=await fetch(url,{headers:{'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`}});
-    if(!res.ok)throw new Error(`HTTP ${res.status}`);
-    allRecords=await res.json();renderAll();
+    const headers={'apikey':SUPABASE_KEY,'Authorization':`Bearer ${SUPABASE_KEY}`};
+    const [rRes,bRes]=await Promise.all([
+      fetch(recordUrl,{headers}),
+      fetch(budgetUrl,{headers}),
+    ]);
+    if(!rRes.ok)throw new Error(`HTTP ${rRes.status}`);
+    allRecords=await rRes.json();
+    budgetData=bRes.ok?await bRes.json():[];
+    renderAll();
   }catch(err){
     document.getElementById('loading').innerHTML=`<p style="color:var(--danger)">載入失敗：${err.message}</p>`;
   }
@@ -305,21 +330,18 @@ async function loadData(){
 function renderAll(){
   document.getElementById('loading').style.display='none';
   document.getElementById('content').style.display='block';
-  renderStats();renderPieChart();renderLineChart();renderMembers();renderTable(activeFilter);
+  renderStats();renderBudget();renderPieChart();renderLineChart();renderMembers();renderTable(activeFilter);
 }
 
 function renderStats(){
-  // 所有支出統一換算為 TWD 後加總
-  const filtered = filterByCurrency(allRecords);
+  const filtered=filterByCurrency(allRecords);
   const expenses=filtered.filter(r=>r.type!=='income');
   const incomes=filtered.filter(r=>r.type==='income');
-
   const totalExpenseTWD=expenses.reduce((s,r)=>s+toTWD(r.amount,r.currency||'JPY'),0);
   const totalIncomeTWD=incomes.reduce((s,r)=>s+toTWD(r.amount,r.currency||'JPY'),0);
   const balanceTWD=totalIncomeTWD-totalExpenseTWD;
   const avgTWD=expenses.length?totalExpenseTWD/expenses.length:0;
 
-  // 主要顯示 TWD，副顯示 JPY
   document.getElementById('stat-expense').textContent=`NT$${Math.round(totalExpenseTWD).toLocaleString()}`;
   document.getElementById('stat-expense-sub').textContent=expenses.length?`≈ ¥${Math.round(totalExpenseTWD/jpyRate).toLocaleString()}`:'';
   document.getElementById('stat-income').textContent=`+NT$${Math.round(totalIncomeTWD).toLocaleString()}`;
@@ -333,6 +355,52 @@ function renderStats(){
   document.getElementById('stat-avg-sub').textContent=expenses.length?`≈ ¥${Math.round(avgTWD/jpyRate).toLocaleString()}`:'';
 }
 
+function renderBudget(){
+  const el=document.getElementById('budget-content');
+  if(!budgetData||!budgetData.length){
+    el.innerHTML=`<div class="no-budget">尚未設定預算。在 LINE 群組輸入「/預算 餐飲 30000」來設定。</div>`;
+    return;
+  }
+
+  // 計算本月各類別使用量（JPY）
+  const now=new Date();
+  const isCurrentMonth=currentYear===now.getFullYear()&&currentMonth===now.getMonth()+1;
+  const usage={};
+  for(const r of allRecords.filter(r=>r.type!=='income')){
+    const amtJPY=toJPY(r.amount,r.currency||'JPY');
+    usage[r.category]=(usage[r.category]||0)+amtJPY;
+  }
+
+  const items=budgetData.map(b=>{
+    const budgetJPY=toJPY(b.amount,b.currency||'JPY');
+    const usedJPY=usage[b.category]||0;
+    const pct=Math.min(Math.round(usedJPY/budgetJPY*100),999);
+    const displayPct=Math.min(pct,100);
+    const barClass=pct>=100?'over':pct>=80?'warn':'ok';
+    const statusClass=pct>=100?'over':pct>=80?'warn':'ok';
+    const statusText=pct>=100?`🚨 超出 ¥${Math.round(usedJPY-budgetJPY).toLocaleString()}`:pct>=80?`⚠️ 剩餘 ¥${Math.round(budgetJPY-usedJPY).toLocaleString()}`:`✅ 剩餘 ¥${Math.round(budgetJPY-usedJPY).toLocaleString()}`;
+    const emoji=CAT_EMOJI[b.category]||'📦';
+    const sym=b.currency==='TWD'?'NT$':'¥';
+
+    return`<div class="budget-item">
+      <div class="budget-item-header">
+        <div class="budget-cat">${emoji} ${b.category}</div>
+        <div class="budget-pct" style="color:${pct>=100?'var(--danger)':pct>=80?'var(--warn)':'var(--success)'}">${pct}%</div>
+      </div>
+      <div class="budget-bar-wrap">
+        <div class="budget-bar ${barClass}" style="width:${displayPct}%"></div>
+      </div>
+      <div class="budget-amounts">
+        <span class="used">¥${Math.round(usedJPY).toLocaleString()}</span>
+        <span class="total">/ ${sym}${Number(b.amount).toLocaleString()}</span>
+      </div>
+      <div class="budget-status ${statusClass}">${statusText}</div>
+    </div>`;
+  }).join('');
+
+  el.innerHTML=`<div class="budget-grid">${items}</div>`;
+}
+
 function renderPieChart(){
   const filtered=filterByCurrency(allRecords).filter(r=>r.type!=='income');
   const byCategory={};
@@ -344,7 +412,7 @@ function renderPieChart(){
   const data=labels.map(l=>Math.round(byCategory[l]));
   const colors=labels.map(l=>CAT_COLORS[l]||'#a0a0b0');
   if(charts.pie)charts.pie.destroy();
-  if(!labels.length){document.getElementById('chart-pie').getContext('2d').clearRect(0,0,999,999);return;}
+  if(!labels.length)return;
   charts.pie=new Chart(document.getElementById('chart-pie').getContext('2d'),{
     type:'doughnut',
     data:{labels,datasets:[{data,backgroundColor:colors,borderWidth:0,hoverOffset:8}]},
@@ -418,9 +486,7 @@ function renderTable(catFilter){
   let filtered=filterByCurrency(allRecords);
   if(catFilter==='收入')filtered=filtered.filter(r=>r.type==='income');
   else if(catFilter!=='全部')filtered=filtered.filter(r=>r.category===catFilter&&r.type!=='income');
-
   if(!filtered.length){document.getElementById('records-table').innerHTML='<div class="empty">無紀錄</div>';return;}
-
   const rows=filtered.map(r=>{
     const date=new Date(r.created_at);
     const dateStr=`${date.getMonth()+1}/${date.getDate()} ${String(date.getHours()).padStart(2,'0')}:${String(date.getMinutes()).padStart(2,'0')}`;
@@ -428,8 +494,6 @@ function renderTable(catFilter){
     const currency=r.currency||'JPY';
     const color=CAT_COLORS[r.category]||'#a0a0b0';
     const emoji=CAT_EMOJI[r.category]||'📦';
-    const mainAmt=fmtMain(r.amount,currency);
-    const subAmt=fmtSub(r.amount,currency);
     const currClass=currency==='TWD'?'twd':'jpy';
     return`<tr class="${isIncome?'income-row':''}">
       <td class="date-cell">${dateStr}</td>
@@ -437,18 +501,14 @@ function renderTable(catFilter){
       <td>${emoji} ${r.item}<span class="curr-badge ${currClass}">${currency}</span></td>
       <td><span class="cat-badge" style="background:${color}22;color:${color}">${r.category}</span></td>
       <td>
-        <div class="amount-main ${isIncome?'income':'expense'}">${isIncome?'+':''}${mainAmt}</div>
-        <div class="amount-sub">${isIncome?'+':''}${subAmt}</div>
+        <div class="amount-main ${isIncome?'income':'expense'}">${isIncome?'+':''}${fmtMain(r.amount,currency)}</div>
+        <div class="amount-sub">${isIncome?'+':''}${fmtSub(r.amount,currency)}</div>
       </td>
       <td><span class="type-badge ${isIncome?'income':'expense'}">${isIncome?'收入':'支出'}</span></td>
       <td style="color:var(--muted);font-size:0.8rem">${r.note||''}</td>
     </tr>`;
   }).join('');
-
-  document.getElementById('records-table').innerHTML=`
-    <table><thead><tr>
-      <th>時間</th><th>成員</th><th>品項</th><th>類別</th><th>金額</th><th>類型</th><th>備註</th>
-    </tr></thead><tbody>${rows}</tbody></table>`;
+  document.getElementById('records-table').innerHTML=`<table><thead><tr><th>時間</th><th>成員</th><th>品項</th><th>類別</th><th>金額</th><th>類型</th><th>備註</th></tr></thead><tbody>${rows}</tbody></table>`;
 }
 
 function exportCSV(){
@@ -457,13 +517,8 @@ function exportCSV(){
   const rows=allRecords.map(r=>{
     const currency=r.currency||'JPY';
     const amtTWD=Math.round(toTWD(r.amount,currency));
-    const amtJPY=currency==='JPY'?r.amount:Math.round(Number(r.amount)/jpyRate);
-    return[
-      new Date(r.created_at).toLocaleString('zh-TW'),
-      r.user_name||'',r.item,r.category,
-      r.type==='income'?'收入':'支出',
-      currency,r.amount,amtTWD,amtJPY,r.note||''
-    ];
+    const amtJPY=Math.round(toJPY(r.amount,currency));
+    return[new Date(r.created_at).toLocaleString('zh-TW'),r.user_name||'',r.item,r.category,r.type==='income'?'收入':'支出',currency,r.amount,amtTWD,amtJPY,r.note||''];
   });
   const csv=[header,...rows].map(row=>row.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
   const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
